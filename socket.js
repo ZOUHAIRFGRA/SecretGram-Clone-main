@@ -25,7 +25,13 @@ const {
   clearChatRoomController,
 } = require("./socketControllers/userActionController");
 
-const io = socketIO(expressServer);
+const io = socketIO(expressServer, {
+  cors: {
+    origin: "https://greyline.vercel.app", 
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
 
 io.on("connection", async (socket) => {
   // -------------Connection controls -------------- //

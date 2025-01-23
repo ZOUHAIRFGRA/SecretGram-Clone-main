@@ -26,8 +26,7 @@ function Login({ setUserWantsToLogin }) {
   return (
     <div className="basis-[35rem]">
       <h1 className="text-cta-icon font-semibold text-[2rem] uppercase mb-[2rem]">
-        Login To Telegram
-      </h1>
+        Login To GreyLine      </h1>
       <Formik
         initialValues={{
           username: "",
@@ -78,7 +77,7 @@ function Login({ setUserWantsToLogin }) {
         onClick={() => setUserWantsToLogin(false)}
         className="mt-[2rem] text-right  text-secondary-text underline cursor-pointer hover:text-cta-icon"
       >
-        New to Telegram
+        New to GreyLine
       </div>
     </div>
   );

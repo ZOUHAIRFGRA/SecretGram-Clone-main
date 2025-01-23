@@ -7,30 +7,34 @@ const useFetch = ({ method, url }, successFn, errorFn) => {
   const dispatch = useDispatch();
 
   const requestFunction = async (values) => {
+    const controller = new AbortController();
+    const { signal } = controller;
+
     const methodUpper = method.toUpperCase();
-    const fetchOptions =
-      methodUpper !== "GET"
-        ? {
-            method: methodUpper,
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-          }
-        : {};
+    const fetchOptions = {
+      method: methodUpper,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // Include cookies
+      ...(methodUpper !== "GET" && { body: JSON.stringify(values) }),
+      signal,
+    };
 
     try {
       setRequestState("loading");
       const response = await fetch(`https://greyline.onrender.com/api${url}`, fetchOptions);
-      let data;
-      if (methodUpper !== "DELETE") {
-        data = await response.json();
+      const data = methodUpper !== "DELETE" ? await response.json() : null;
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Something went wrong!");
       }
-      if (!response.ok) throw new Error(data.message);
+
       setRequestState("success");
       successFn && successFn(data);
       return data;
     } catch (error) {
+      if (error.name === "AbortError") return; // Ignore aborted requests
       setRequestState("error");
       dispatch(
         notificationActions.addNotification({
@@ -38,7 +42,6 @@ const useFetch = ({ method, url }, successFn, errorFn) => {
           type: "error",
         })
       );
-
       errorFn && errorFn(error);
     }
   };

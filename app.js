@@ -13,7 +13,13 @@ const errorController = require("./controllers/errorController");
 
 app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://greyline.vercel.app", 
+    credentials: true,
+  })
+);
+
 
 // Routes
 app.use("/api/user", authRouter);

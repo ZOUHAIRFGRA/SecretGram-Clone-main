@@ -15,13 +15,17 @@ const assignTokenToCookie = (user, res, statusCode) => {
   const cookieOptions = {
     httpOnly: true,
     secure: true,
+    sameSite: "none", // Allow cookies to be sent across different origins
     expires: new Date(
       Date.now() + parseInt(process.env.JWT_EXPIRES_IN) * 24 * 60 * 60 * 1000
     ),
   };
 
   res.cookie("telegramToken", token, cookieOptions);
-  res.cookie("userId", user._id);
+  res.cookie("userId", user._id, {
+    ...cookieOptions,
+    secure: true, // Ensure consistency with the `telegramToken` cookie
+  });
 
   user.password = undefined;
 

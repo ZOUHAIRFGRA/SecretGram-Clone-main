@@ -15,7 +15,8 @@ app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://greyline.vercel.app", 
+    origin: process.env.NODE_ENV === "dev" ? "http://localhost:3000" 
+    : "https://greyline.vercel.app", 
     credentials: true,
   })
 );

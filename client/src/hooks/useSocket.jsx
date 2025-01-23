@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
 
-const backendURL = "https://greyline.onrender.com";
-  // process.env.NODE_ENV === "production"
-    // ?
-    //  "https://greyline.onrender.com"
-    // : "http://localhost:5000";
+const backendURL = 
+  process.env.NODE_ENV === "development"
+    ?"http://localhost:3000"
+    : "https://greyline.onrender.com"
+     ;
 
 const socket = io(backendURL, {
   withCredentials: true,

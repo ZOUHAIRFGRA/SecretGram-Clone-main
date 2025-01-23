@@ -21,9 +21,12 @@ const useFetch = ({ method, url }, successFn, errorFn) => {
       signal,
     };
 
+    const apiUrl = process.env.NODE_ENV === "development" ? "http://localhost:4000"
+    : "https://greyline.onrender.com";
+
     try {
       setRequestState("loading");
-      const response = await fetch(`https://greyline.onrender.com/api${url}`, fetchOptions);
+      const response = await fetch(`${apiUrl}/api${url}`, fetchOptions);
       const data = methodUpper !== "DELETE" ? await response.json() : null;
 
       if (!response.ok) {

@@ -15,7 +15,7 @@ const assignTokenToCookie = (user, res, statusCode) => {
   const cookieOptions = {
     httpOnly: true,
     secure: true,
-    sameSite: "none", // Allow cookies to be sent across different origins
+    sameSite:  process.env.NODE_ENV === "dev" ? "Lax" : "none", // Allow cookies to be sent across different origins
     expires: new Date(
       Date.now() + parseInt(process.env.JWT_EXPIRES_IN) * 24 * 60 * 60 * 1000
     ),

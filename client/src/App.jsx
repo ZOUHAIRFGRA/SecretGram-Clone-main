@@ -14,6 +14,7 @@ import useAppHeight from "./hooks/useAppHeight";
 
 function App() {
   // Initialize application
+  console.log(process.env.NODE_ENV);
   const { loggedIn } = useInit();
   const modalType = useSelector((state) => state.modalReducer.type);
   useAppHeight();

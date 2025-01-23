@@ -10,6 +10,7 @@ import CTAButtons from "./CTAButtons";
 // import AttachFileOrRecordDuration from "./AttachFileOrRecordDuration";
 import EmojiModal from "./EmojiModal";
 import BubbleTail from "./BubbleTail";
+import useSendMessage from "../../../hooks/useSendMessage";
 
 function NewMessage({ currentChatRoom }) {
   // Get current message mode
@@ -30,6 +31,9 @@ function NewMessage({ currentChatRoom }) {
 
   // const isRecording = useMemo(() => messageMode === "recording", [messageMode]);
 const isRecording = false;
+
+const { sendMessage } = useSendMessage(setMessageEmpty); // Use the sendMessage hook
+
   const isTyping = useMemo(() => messageMode === "typing", [messageMode]);
 
   //   Recorder hook to record messages
@@ -98,6 +102,7 @@ const isRecording = false;
               messageEmpty={messageEmpty}
               getCaretIndex={getCaretIndex}
               emitTypingEvent={emitTypingEvent}
+              sendMessage={sendMessage} // Pass sendMessage prop
             />
 {/* 
             <AttachFileOrRecordDuration

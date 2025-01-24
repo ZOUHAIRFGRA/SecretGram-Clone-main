@@ -5,8 +5,10 @@ import { contactsActions } from "../store/contactsSlice";
 import useFetch from "./useFetch";
 import { chatActions } from "../store/chatSlice";
 import { modalActions } from "../store/modalSlice";
-import useChatBot from "./useChatBot";
+import {jwtDecode} from "jwt-decode"; 
 import { authActions } from "../store/authSlice";
+// import useChatBot from "./useChatBot";
+// import { authActions } from "../store/authSlice";
 
 const useInit = () => {
   // useSocketHook
@@ -20,25 +22,53 @@ const useInit = () => {
       .setAttribute("class", initialMode ? "dark" : "null");
   }, []);
 
-  const { respondAsChatBot } = useChatBot();
+  // const { respondAsChatBot } = useChatBot();
 
-  // Send default messages from bot
-  const sendDefaultMessagesFromBot = (chatRoomId) => {
-    respondAsChatBot({
-      chatRoomId,
-      message:
-        "Hi there, I'm Eddie <br /> <br /> A Chat bot to keep you busy while you are still new to the app (built by Adekola Thanni). <br /> <br /> You can test out some of the features of the app while talking with me but I'll strongly recommend you adding a friend to your contact list. <br /> You can hop on a call and video call with them, something more fun than talking to a robot <img class='w-[2.5rem] h-[2.5rem] inline-block' src='https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f643.png'>",
-    });
-  };
+  // // Send default messages from bot
+  // const sendDefaultMessagesFromBot = (chatRoomId) => {
+  //   respondAsChatBot({
+  //     chatRoomId,
+  //     message:
+  //       "Hi there, I'm Eddie <br /> <br /> A Chat bot to keep you busy while you are still new to the app (built by Adekola Thanni). <br /> <br /> You can test out some of the features of the app while talking with me but I'll strongly recommend you adding a friend to your contact list. <br /> You can hop on a call and video call with them, something more fun than talking to a robot <img class='w-[2.5rem] h-[2.5rem] inline-block' src='https://cdn.jsdelivr.net/npm/emoji-datasource-apple/img/apple/64/1f643.png'>",
+  //   });
+  // };
 
   // Get logged in state
   const loggedIn = useSelector((state) => state.authReducer.loggedIn);
 
-  const isNew = useSelector((state) => state.authReducer.isNew);
+  // const isNew = useSelector((state) => state.authReducer.isNew);
 
   const chatList = useSelector((state) => state.chatListReducer);
 
   const dispatch = useDispatch();
+
+  
+
+
+
+  const { reqFn: validateToken } = useFetch(
+    { method: "GET", url: "/auth/validate-token" }, // Your token validation endpoint
+    (data) => {
+      // Token is valid, you can log success or do other things here
+      console.log("Token is valid", data);
+    },
+    (error) => {
+      // Token is invalid or expired, handle the error and log out
+      console.log("Token is invalid or expired", error);
+      dispatch(authActions.logout()); // Dispatch logout action to reset the state
+    }
+  );
+
+  
+
+
+  
+  
+
+  useEffect(() => {
+    validateToken();
+  }, []);
+
 
   // Fetch user contacts
   const { reqFn: fetchContacts } = useFetch(
@@ -54,6 +84,14 @@ const useInit = () => {
       fetchContacts();
     }
   }, [loggedIn]);
+
+  // Remove logged in status on logout
+  useEffect(() => {
+    if (!loggedIn) {
+      localStorage.removeItem("loggedIn");
+    }
+  }, [loggedIn]);
+  
 
   // On getting user details
   useEffect(() => {
@@ -121,11 +159,11 @@ const useInit = () => {
       }
     );
 
-    if (chatList.length && isNew.isNew) {
-      sendDefaultMessagesFromBot(isNew.payload.chatRoomId);
+    // if (chatList.length && isNew.isNew) {
+    //   sendDefaultMessagesFromBot(isNew.payload.chatRoomId);
 
-      dispatch(authActions.setUserIsNew({}));
-    }
+    //   dispatch(authActions.setUserIsNew({}));
+    // }
 
     return () => {
       socket.off("user:callRequest");

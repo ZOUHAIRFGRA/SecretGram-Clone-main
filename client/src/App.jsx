@@ -3,7 +3,7 @@ import DeleteContact from "./components/globals/DeleteContact";
 import NewContactForm from "./components/globals/NewContactForm";
 import Sidebar from "./components/globals/Sidebar";
 import VoiceCallModal from "./components/globals/VoiceCallModal";
-import VideoCallModal from "./components/globals/VideoCallModal";
+// import VideoCallModal from "./components/globals/VideoCallModal";
 import Authentication from "./pages/Authentication";
 import Chat from "./pages/Chat";
 import UserProfile from "./pages/UserProfile";
@@ -11,10 +11,13 @@ import useInit from "./hooks/useInit";
 import Notification from "./components/globals/Notification";
 import { useSelector } from "react-redux";
 import useAppHeight from "./hooks/useAppHeight";
+import { useEffect } from "react";
 
 function App() {
   // Initialize application
-  console.log(process.env.NODE_ENV);
+  useEffect(() => {
+  console.log(process.env.NODE_ENV)
+  }, []);
   const { loggedIn } = useInit();
   const modalType = useSelector((state) => state.modalReducer.type);
   useAppHeight();

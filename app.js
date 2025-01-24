@@ -33,6 +33,25 @@ app.use("/api/*", (req, res, next) => {
   next();
 });
 
+
+const jwt = require("jsonwebtoken");
+
+app.get("/api/auth/validate-token", (req, res) => {
+  const token = req.cookies.telegramToken; // Automatically retrieved from HttpOnly cookie
+  console.log(token);
+  if (!token) {
+    return res.status(401).json({ message: "Token not found" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    return res.status(200).json({ valid: true, decoded });
+  } catch (err) {
+    return res.status(401).json({ valid: false, message: "Invalid or expired token" });
+  }
+});
+
+
 app.use("/api/contacts", contactsRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/chatRoom", chatRoomRouter);

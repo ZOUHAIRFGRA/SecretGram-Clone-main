@@ -5,7 +5,7 @@ const catchAsyncError = require("../utilities/catchAsyncError");
 
 const signToken = (user) => {
   return jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+    expiresIn: "365 days",
   });
 };
 
@@ -17,7 +17,7 @@ const assignTokenToCookie = (user, res, statusCode) => {
     secure: true,
     sameSite:  process.env.NODE_ENV === "dev" ? "Lax" : "none", // Allow cookies to be sent across different origins
     expires: new Date(
-      Date.now() + parseInt(process.env.JWT_EXPIRES_IN) * 24 * 60 * 60 * 1000
+      Date.now() + 365 * 24 * 60 * 60 * 1000
     ),
   };
 
